@@ -11,17 +11,17 @@ class Password(NamedTuple):
     pwd: str
 
     def validate(self) -> bool:
-        return int(self.lo) <= self.pwd.count(self.letter) <= int(self.hi)
+        return self.lo <= self.pwd.count(self.letter) <= self.hi
 
     def validate2(self) -> bool:
-        first = self.pwd[int(self.lo) - 1] == self.letter
-        second = self.pwd[int(self.hi) - 1] == self.letter
+        first = self.pwd[self.lo - 1] == self.letter
+        second = self.pwd[self.hi - 1] == self.letter
         return first ^ second
 
     @staticmethod
     def parse_line(line: str) -> Password:
         pos1, pos2, letter, _, pwd = re.split("[-: ]", line)
-        return Password(pos1, pos2, letter, pwd)
+        return Password(int(pos1), int(pos2), letter, pwd)
 
 
 if __name__ == '__main__':
