@@ -16,7 +16,7 @@ def validate_again(line: str) -> bool:
 
 
 def count_valid_passwords(func: Callable) -> int:
-    with open("input_day02.txt", "r") as f:
+    with open("data/input_day02.txt", "r") as f:
         return sum(func(line) for line in f)
 
 

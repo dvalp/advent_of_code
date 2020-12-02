@@ -42,6 +42,6 @@ def find_prod(expense_items: Iterable) -> np.ndarray:
 
 
 if __name__ == '__main__':
-    expenses = set(np.loadtxt("input_day01.txt", dtype=int))
+    expenses = set(np.loadtxt("data/input_day01.txt", dtype=int))
 
     print(find_prod(expenses))
