@@ -1,5 +1,6 @@
 import re
 from collections import Counter
+from typing import Callable
 
 
 def validate_password(line: str) -> bool:
@@ -14,10 +15,11 @@ def validate_again(line: str) -> bool:
     return first ^ second
 
 
-def count_valid_passwords():
+def count_valid_passwords(func: Callable) -> int:
     with open("input_day02.txt", "r") as f:
-        return sum(validate_again(line) for line in f)
+        return sum(func(line) for line in f)
 
 
 if __name__ == '__main__':
-    print(count_valid_passwords())
+    print(count_valid_passwords(validate_password))
+    print(count_valid_passwords(validate_again))
