@@ -34,3 +34,7 @@ def check_all_slopes(tree_map: list[str]) -> int:
 def parse_input(fpath="../data/input_day03.txt") -> list[str]:
     with open(fpath, "r") as f:
         return [line.strip() for line in f]
+
+
+if __name__ == '__main__':
+    print(check_all_slopes(parse_input()))
