@@ -5,7 +5,7 @@ from typing import Iterable
 def tree_count():
     horiz = 0
 
-    with open("data/input_day03.txt", "r") as f:
+    with open("../data/input_day03.txt", "r") as f:
         next(f)
         for line in f:
             horiz += 3
@@ -31,24 +31,6 @@ def check_all_slopes(tree_map: list[str]) -> int:
     return math.prod(sum(tree_count_deluxe(tree_map=tree_map, offsets=offsets)) for offsets in route_offsets)
 
 
-def parse_input(fpath="data/input_day03.txt") -> list[str]:
+def parse_input(fpath="../data/input_day03.txt") -> list[str]:
     with open(fpath, "r") as f:
         return [line.strip() for line in f]
-
-
-if __name__ == '__main__':
-    print(sum(tree_count()))
-    t_map = """..##.......\n
-    #...#...#..\n
-    .#....#..#.\n
-    ..#.#...#.#\n
-    .#...##..#.\n
-    ..#.##.....\n
-    .#.#.#....#\n
-    .#........#\n
-    #.##...#...\n
-    #...##....#\n
-    .#..#...#.#\n""".split()
-    print(check_all_slopes(t_map))
-    print(sum(tree_count_deluxe(tree_map=parse_input(), offsets=(3, 1))))
-    print(check_all_slopes(parse_input()))
