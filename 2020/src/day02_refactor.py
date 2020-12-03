@@ -25,5 +25,5 @@ class Password(NamedTuple):
 
 
 if __name__ == '__main__':
-    with open("data/input_day02.txt", "r") as f:
+    with open("../data/input_day02.txt", "r") as f:
         print(sum(Password.parse_line(line).validate2() for line in f))
