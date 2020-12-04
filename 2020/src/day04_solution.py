@@ -72,7 +72,7 @@ class Passport(NamedTuple):
             if unit == "cm":
                 endpoints = ValidRange(150, 193)
             else:
-                return 59 <= int(self.hgt[:-2]) <= 76
+                endpoints = ValidRange(59, 76)
             return self._validate_int_range(self.hgt[:-2], endpoints)
         return False
 
