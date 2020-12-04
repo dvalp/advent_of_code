@@ -26,6 +26,7 @@ def validate_passports(pp_list):
 
 
 PPField = namedtuple("PPField", "key value")
+ValidRange = namedtuple("ValidRange", "start end")
 
 
 class Passport(NamedTuple):
@@ -43,21 +44,25 @@ class Passport(NamedTuple):
         parsed_pp = dict(PPField(*field.split(":")) for field in pp_info.split())
         return Passport(**parsed_pp)
 
+    @staticmethod
+    def _validate_int_range(value: str, endpoints: ValidRange) -> bool:
+        return endpoints.start <= int(value) <= endpoints.end
+
     @property
     def valid_byr(self):
-        valid_year = 1920 <= int(self.byr) <= 2002
+        valid_year = self._validate_int_range(self.byr, ValidRange(1920, 2002))
         valid_length = len(self.byr) == 4
         return all([valid_year, valid_length])
 
     @property
     def valid_iyr(self):
-        valid_year = 2010 <= int(self.iyr) <= 2020
+        valid_year = self._validate_int_range(self.iyr, ValidRange(2010, 2020))
         valid_length = len(self.iyr) == 4
         return all([valid_year, valid_length])
 
     @property
     def valid_eyr(self):
-        valid_year = 2020 <= int(self.eyr) <= 2030
+        valid_year = self._validate_int_range(self.eyr, ValidRange(2020, 2030))
         valid_length = len(self.eyr) == 4
         return all([valid_year, valid_length])
 
@@ -65,9 +70,10 @@ class Passport(NamedTuple):
     def valid_hgt(self):
         if (unit := self.hgt[-2:]) == "cm" or unit == "in":
             if unit == "cm":
-                return 150 <= int(self.hgt[:-2]) <= 193
-            elif unit == "in":
+                endpoints = ValidRange(150, 193)
+            else:
                 return 59 <= int(self.hgt[:-2]) <= 76
+            return self._validate_int_range(self.hgt[:-2], endpoints)
         return False
 
     @property
@@ -95,7 +101,7 @@ def validate_all_passports(documents: list[str]):
             passport = Passport.parse_info(document)
             yield passport.valid_passport
         except TypeError:
-            print("*** Failed:", document.split())
+            # print("*** Failed:", document.split())
             yield False
         except Exception as e:
             print(e)
