@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import namedtuple
 from typing import NamedTuple
 
 sample_text = '''ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
@@ -24,6 +25,9 @@ def validate_passports(pp_list):
         yield all((field in line) for field in FIELDS)
 
 
+PPField = namedtuple("PPField", "key value")
+
+
 class Passport(NamedTuple):
     ecl: str
     pid: str
@@ -35,8 +39,8 @@ class Passport(NamedTuple):
     cid: str = None
 
     @staticmethod
-    def parse_info(pp_info) -> Passport:
-        parsed_pp = dict(field.split(":") for field in pp_info.split())
+    def parse_info(pp_info: str) -> Passport:
+        parsed_pp = dict(PPField(*field.split(":")) for field in pp_info.split())
         return Passport(**parsed_pp)
 
     @property
