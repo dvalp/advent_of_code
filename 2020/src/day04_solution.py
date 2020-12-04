@@ -62,7 +62,7 @@ class Passport(NamedTuple):
         if (unit := self.hgt[-2:]) == "cm" or unit == "in":
             if unit == "cm":
                 return 150 <= int(self.hgt[:-2]) <= 193
-            if unit == "in":
+            elif unit == "in":
                 return 59 <= int(self.hgt[:-2]) <= 76
         return False
 
@@ -81,7 +81,8 @@ class Passport(NamedTuple):
 
     @property
     def valid_passport(self):
-        return all([self.valid_byr, self.valid_iyr, self.valid_eyr, self.valid_hgt, self.valid_ecl, self.valid_hcl, self.valid_pid])
+        return all([self.valid_byr, self.valid_iyr, self.valid_eyr, self.valid_hgt, self.valid_ecl, self.valid_hcl,
+                    self.valid_pid])
 
 
 def validate_all_passports(documents: list[str]):
