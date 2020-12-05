@@ -25,7 +25,6 @@ def seat_finder_01(boarding_pass: str) -> int:
 
 
 def _binary_search(code: deque, search_space: tuple) -> int:
-    print(code)
     value = code.popleft()
     lo, hi = search_space
 
@@ -35,18 +34,22 @@ def _binary_search(code: deque, search_space: tuple) -> int:
     if not code:
         if not hi - lo == 1:
             raise ValueError("Search space failed to reduce to size 2")
-        if value in {"F", "L"}:
+        if value in LO_CODES:
             return lo
         else:
             return hi
     else:
-        diff = hi - lo
+        diff = (hi - lo) // 2
         if value in LO_CODES:
-            hi -= diff
+            hi = lo + diff
         elif value in HI_CODES:
-            lo += diff
+            lo = hi - diff
         return _binary_search(code, (lo, hi))
 
 
 def find_highest_seat_id():
     pass
+
+
+if __name__ == '__main__':
+    print(_binary_search(deque("RLR"), (0, 7)))
