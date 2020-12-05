@@ -9,6 +9,7 @@ SAMPLES = [
 
 ]
 
+
 def seat_finder_01(boarding_pass: str):
     rows = 128
     seats = 8
@@ -16,3 +17,7 @@ def seat_finder_01(boarding_pass: str):
     column_code = boarding_pass[7:]
 
     seat_id = row * 8 + column
+
+
+def find_highest_seat_id():
+    pass
