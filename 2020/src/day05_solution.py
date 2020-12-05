@@ -1,5 +1,4 @@
 from collections import namedtuple, deque
-from typing import Iterable
 
 SampleID = namedtuple("SampleID", "code row column id")
 SAMPLES = [
@@ -52,6 +51,12 @@ def find_highest_seat_id(codes: set[str]) -> int:
     return max(seat_finder(code) for code in codes)
 
 
+def find_missing_seat(codes: set[str]) -> int:
+    seat_ids = {seat_finder(code) for code in codes}
+    possible_ids = {*range(min(seat_ids), max(seat_ids) + 1)}
+    return (possible_ids - seat_ids).pop()
+
+
 if __name__ == '__main__':
     print(seat_finder(SAMPLES[0].code))
     seat_codes = {sample.code for sample in SAMPLES}
@@ -60,3 +65,4 @@ if __name__ == '__main__':
     with open("../data/input_day05.txt")as f:
         all_codes = {line.strip() for line in f}
     print(find_highest_seat_id(all_codes))
+    print(find_missing_seat(all_codes))
