@@ -14,12 +14,12 @@ HI_CODES = {"B", "R"}
 
 
 def seat_finder_01(boarding_pass: str) -> int:
-    rows = (0, 127)
-    columns = (0, 7)
+    row_range = (0, 127)
+    column_range = (0, 7)
     row_code = deque(boarding_pass[:7])
     column_code = deque(boarding_pass[7:])
-    row = _binary_search(row_code, rows)
-    column = _binary_search(column_code, columns)
+    row = _binary_search(row_code, row_range)
+    column = _binary_search(column_code, column_range)
     seat_id = row * 8 + column
     return seat_id
 
@@ -47,9 +47,11 @@ def _binary_search(code: deque, search_space: tuple) -> int:
         return _binary_search(code, (lo, hi))
 
 
-def find_highest_seat_id():
-    pass
+def find_highest_seat_id(codes: set[str]) -> int:
+    return max(seat_finder_01(code) for code in codes)
 
 
 if __name__ == '__main__':
-    print(_binary_search(deque("RLR"), (0, 7)))
+    print(seat_finder_01(SAMPLES[0].code))
+    seat_codes = {sample.code for sample in SAMPLES}
+    print(find_highest_seat_id(seat_codes))
