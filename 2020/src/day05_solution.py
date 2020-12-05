@@ -1,4 +1,5 @@
 from collections import namedtuple, deque
+from typing import Iterable
 
 SampleID = namedtuple("SampleID", "code row column id")
 SAMPLES = [
@@ -13,7 +14,7 @@ LO_CODES = {"F", "L"}
 HI_CODES = {"B", "R"}
 
 
-def seat_finder_01(boarding_pass: str) -> int:
+def seat_finder(boarding_pass: str) -> int:
     row_range = (0, 127)
     column_range = (0, 7)
     row_code = deque(boarding_pass[:7])
@@ -48,10 +49,14 @@ def _binary_search(code: deque, search_space: tuple) -> int:
 
 
 def find_highest_seat_id(codes: set[str]) -> int:
-    return max(seat_finder_01(code) for code in codes)
+    return max(seat_finder(code) for code in codes)
 
 
 if __name__ == '__main__':
-    print(seat_finder_01(SAMPLES[0].code))
+    print(seat_finder(SAMPLES[0].code))
     seat_codes = {sample.code for sample in SAMPLES}
     print(find_highest_seat_id(seat_codes))
+
+    with open("../data/input_day05.txt")as f:
+        all_codes = {line.strip() for line in f}
+    print(find_highest_seat_id(all_codes))
