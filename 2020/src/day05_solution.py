@@ -1,4 +1,5 @@
 from collections import namedtuple, deque
+from pathlib import Path
 
 SampleID = namedtuple("SampleID", "code row column id")
 SAMPLES = [
@@ -57,6 +58,14 @@ def find_missing_seat(codes: set[str]) -> int:
     return (possible_ids - seat_ids).pop()
 
 
+def simpler_seat_id():
+    """Including this as a reminder that a different perspective can help"""
+    fpath = Path("../data/input_day05.txt")
+    tl = str.maketrans('FBLR', '0101')
+    ids = {int(code.translate(tl), 2) for code in Path.read_text(fpath).split()}
+    return max(ids), max({*range(max(ids))} - ids)
+
+
 if __name__ == '__main__':
     print(seat_finder(SAMPLES[0].code))
     seat_codes = {sample.code for sample in SAMPLES}
@@ -66,3 +75,4 @@ if __name__ == '__main__':
         all_codes = {line.strip() for line in f}
     print(find_highest_seat_id(all_codes))
     print(find_missing_seat(all_codes))
+    print(simpler_seat_id())
