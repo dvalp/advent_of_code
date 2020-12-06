@@ -21,6 +21,16 @@ def count_group_yes(answer: str) -> int:
     return sum(True for val in counts.values() if val == group_size)
 
 
+# Using sets better
+def answers_with_sets():
+    fpath = Path("../data/input_day06.txt")
+    groups = [[set(person) for person in group.split()] for group in fpath.read_text().split("\n\n")]
+    any_answered = (sum(len(set.union(*group)) for group in groups))
+    all_answered = (sum(len(set.intersection(*group)) for group in groups))
+    return any_answered, all_answered
+
+
 if __name__ == '__main__':
     print(total_answers(count_group))
     print(total_answers(count_group_yes))
+    print(answers_with_sets())
