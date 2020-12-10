@@ -49,14 +49,13 @@ RAW2 = """28
 """
 
 
-def build_digraph(ratings: set[int]) -> nx.Graph:
-    root_node = {(0, value) for value in {1, 2, 3} if value in ratings}
+def build_digraph(ratings: set[int]) -> nx.DiGraph:
     jolt_pairs = {(first_rating, converted)
                   for first_rating in ratings
                   for converted in {first_rating + 1, first_rating + 2, first_rating + 3}
                   if converted in ratings}
     G = nx.DiGraph()
-    G.add_edges_from(root_node | jolt_pairs)
+    G.add_edges_from(jolt_pairs)
     return G
 
 
@@ -67,24 +66,35 @@ def calculate_joltage(ratings: set[int]) -> int:
 
 
 def calculate_jolt_distribution(ratings: set[int]) -> int:
-    joltage_differences = zip(ratings | {0}, ratings | {max(ratings) + 3})
+    next_adaptor = list(ratings | {max(ratings) + 3})[1:]
+    joltage_differences = zip(ratings, next_adaptor)
     j_dist = Counter((b - a) for a, b in joltage_differences)
     return j_dist[1] * j_dist[3]
 
 
 def count_number_of_paths(ratings: set[int]) -> int:
     graph = build_digraph(ratings)
+    path_counts = {}
+    for adaptor in ratings:
+        if adaptor == 0:
+            path_counts[0] = 1
+        elif adaptor in {1, 2}:
+            path_counts[adaptor] = graph.in_degree[adaptor]
+        else:
+            n_paths = sum(path_counts.get(parent, 0) for parent in graph.predecessors(adaptor))
+            path_counts[adaptor] = n_paths
 
-    return len(list(nx.all_simple_paths(graph, 0, max(graph.nodes))))
+    return path_counts[max(graph.nodes)]
 
 
 if __name__ == '__main__':
-    sample_input1 = {int(val) for val in RAW1.split()}
-    sample_input2 = {int(val) for val in RAW2.split()}
+    sample_input1 = {0} | {int(val) for val in RAW1.split()}
+    sample_input2 = {0} | {int(val) for val in RAW2.split()}
     with open("../data/input_day10.txt", "r") as f:
-        ratings_input = {int(line.strip()) for line in f}
+        ratings_input = {0} | {int(line.strip()) for line in f}
     print(calculate_joltage(sample_input1))
     print(calculate_jolt_distribution(sample_input1))
     print(calculate_jolt_distribution(sample_input2))
     print(calculate_jolt_distribution(ratings_input))
     print(count_number_of_paths(sample_input2))
+    print(count_number_of_paths(ratings_input))
