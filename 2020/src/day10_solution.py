@@ -1,6 +1,7 @@
 from collections import Counter
 
 import networkx as nx
+import numpy as np
 
 RAW1 = """16
 10
@@ -87,6 +88,33 @@ def count_number_of_paths(ratings: set[int]) -> int:
     return path_counts[max(graph.nodes)]
 
 
+def simple_path_count_numpy() -> int:
+    adapters = np.loadtxt("../data/input_day10.txt", dtype=int)
+    adapters.sort()
+    path_totals = np.zeros(max(adapters) + 1, dtype=int)
+    path_totals[0] = 1
+
+    for adapter in adapters:
+        if adapter == 1:
+            path_totals[1] = 1
+        elif adapter == 2:
+            path_totals[2] = path_totals[0:2].sum()
+        else:
+            path_totals[adapter] = path_totals[adapter - 3: adapter].sum()
+
+    return path_totals[-1]
+
+
+def simple_path_count_dict(adapters: set[int]) -> int:
+    path_counts = {}
+    for adapter in adapters:
+        if adapter == 0:
+            path_counts[adapter] = 1
+        else:
+            path_counts[adapter] = sum(path_counts.get(parent, 0) for parent in {adapter - 3, adapter - 2, adapter - 1})
+    return path_counts[max(adapters)]
+
+
 if __name__ == '__main__':
     sample_input1 = {0} | {int(val) for val in RAW1.split()}
     sample_input2 = {0} | {int(val) for val in RAW2.split()}
@@ -98,3 +126,4 @@ if __name__ == '__main__':
     print(calculate_jolt_distribution(ratings_input))
     print(count_number_of_paths(sample_input2))
     print(count_number_of_paths(ratings_input))
+    print(simple_path_count_dict(ratings_input))
