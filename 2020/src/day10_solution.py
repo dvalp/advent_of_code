@@ -49,8 +49,7 @@ RAW2 = """28
 """
 
 
-def calculate_joltage(ratings: set[int]) -> int:
-    """This is what happens when you don't read instructions"""
+def build_digraph(ratings: set[int]) -> nx.Graph:
     root_node = {(0, value) for value in {1, 2, 3} if value in ratings}
     jolt_pairs = {(first_rating, converted)
                   for first_rating in ratings
@@ -58,13 +57,25 @@ def calculate_joltage(ratings: set[int]) -> int:
                   if converted in ratings}
     G = nx.DiGraph()
     G.add_edges_from(root_node | jolt_pairs)
-    return 3 + max(nx.descendants(G, 0))
+    return G
+
+
+def calculate_joltage(ratings: set[int]) -> int:
+    """This is what happens when you don't read instructions"""
+    graph = build_digraph(ratings)
+    return 3 + max(nx.descendants(graph, 0))
 
 
 def calculate_jolt_distribution(ratings: set[int]) -> int:
     joltage_differences = zip(ratings | {0}, ratings | {max(ratings) + 3})
     j_dist = Counter((b - a) for a, b in joltage_differences)
     return j_dist[1] * j_dist[3]
+
+
+def count_number_of_paths(ratings: set[int]) -> int:
+    graph = build_digraph(ratings)
+
+    return len(list(nx.all_simple_paths(graph, 0, max(graph.nodes))))
 
 
 if __name__ == '__main__':
@@ -76,3 +87,4 @@ if __name__ == '__main__':
     print(calculate_jolt_distribution(sample_input1))
     print(calculate_jolt_distribution(sample_input2))
     print(calculate_jolt_distribution(ratings_input))
+    print(count_number_of_paths(sample_input2))
