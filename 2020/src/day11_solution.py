@@ -25,6 +25,14 @@ class Point(NamedTuple):
 class Board:
     seat_map: dict[Point, State]
 
+    @property
+    def filled_seat_count(self):
+        return sum(self.seat_map.values())
+
+    @property
+    def number_of_seats(self):
+        return len(self.seat_map)
+
     @staticmethod
     def initialize_board(empty_map: str):
         """All seats start empty, so populate the dictionary with only empty seats"""
@@ -33,7 +41,8 @@ class Board:
         for c in empty_map:
             if c == "\n":
                 current_location = Point(current_location.row + 1, 0)
-            if c == "L":
+                continue
+            elif c == "L":
                 new_map[current_location] = State.EMPTY
             current_location = Point(current_location.row, current_location.column + 1)
         return Board(new_map)
@@ -50,9 +59,20 @@ class Board:
             number_neighbors = self.count_neighbors(seat)
             if number_neighbors == Action.FILL:
                 new_map[seat] = State.FILLED
-            if number_neighbors >= Action.EMPTY:
+            elif number_neighbors >= Action.EMPTY:
                 new_map[seat] = State.EMPTY
-        return Board(new_map)
+            else:
+                new_map[seat] = self.seat_map[seat]
+        return new_map
+
+    def find_stable_state(self):
+        while True:
+            new_map = self.update_board()
+
+            if new_map == self.seat_map:
+                return self.filled_seat_count
+
+            self.seat_map = new_map
 
 
 if __name__ == '__main__':
@@ -67,8 +87,12 @@ LLLLLLLLLL
 L.LLLLLL.L
 L.LLLLL.LL"""
     challenge_map = Path("../data/input_day11.txt").read_text()
+
     sample_board = Board.initialize_board(sample_map)
+    challenge_board = Board.initialize_board(challenge_map)
     print(sample_board.count_neighbors(Point(0, 2)))
     print(sample_board)
     print(sample_board.update_board())
-    print(sum(sample_board.update_board().seat_map.values()))
+    print(sample_board.find_stable_state())
+
+    print(challenge_board.find_stable_state())
