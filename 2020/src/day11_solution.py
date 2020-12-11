@@ -40,7 +40,7 @@ class Board:
                 current_location = Point(current_location.row + 1, 0)
             if c == "L":
                 new_map[current_location] = State.EMPTY
-                current_location = Point(current_location.row, current_location.column + 1)
+            current_location = Point(current_location.row, current_location.column + 1)
         return Board(new_map)
 
     def update_board(self):
