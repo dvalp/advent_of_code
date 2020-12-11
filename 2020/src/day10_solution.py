@@ -105,13 +105,12 @@ def simple_path_count_numpy() -> int:
     return path_totals[-1]
 
 
-def simple_path_count_dict(adapters: set[int]) -> int:
-    path_counts = {}
+def simple_path_count_dict() -> int:
+    with open("../data/input_day10.txt", "r") as f:
+        adapters = {int(line.strip()) for line in f}
+    path_counts = {0: 1}
     for adapter in adapters:
-        if adapter == 0:
-            path_counts[adapter] = 1
-        else:
-            path_counts[adapter] = sum(path_counts.get(parent, 0) for parent in {adapter - 3, adapter - 2, adapter - 1})
+        path_counts[adapter] = sum(path_counts.get(parent, 0) for parent in {adapter - 3, adapter - 2, adapter - 1})
     return path_counts[max(adapters)]
 
 
@@ -126,4 +125,4 @@ if __name__ == '__main__':
     print(calculate_jolt_distribution(ratings_input))
     print(count_number_of_paths(sample_input2))
     print(count_number_of_paths(ratings_input))
-    print(simple_path_count_dict(ratings_input))
+    print(simple_path_count_dict())
