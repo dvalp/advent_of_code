@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import IntEnum
 from itertools import product, repeat
 from pathlib import Path
-from typing import NamedTuple, Literal, Callable
+from typing import NamedTuple, Literal
 
 
 class State(IntEnum):
@@ -47,7 +47,8 @@ class Board:
             elif c == "L":
                 new_map[current_location] = State.EMPTY
             current_location = Point(current_location.row, current_location.column + 1)
-        return Board(new_map, max_neighbors=threshold, n_rows=n_rows, n_columns=n_columns, count_function=count_function)
+        return Board(new_map, max_neighbors=threshold, n_rows=n_rows, n_columns=n_columns,
+                     count_function=count_function)
 
     def count_adjacent_neighbors(self, seat_position: Point):
         rows = range(seat_position.row - 1, seat_position.row + 2)
@@ -72,7 +73,11 @@ class Board:
             zip(row_higher, column_higher)
         ]
         for direction in search_directions:
-            neighbor_count += any(self.seat_map.get(Point(*position), State.EMPTY) for position in direction)
+            for position in direction:
+                if position in self.seat_map:
+                    neighbor_count += self.seat_map[Point(*position)]
+                    break
+
             if neighbor_count >= self.max_neighbors:
                 break
 
@@ -123,14 +128,17 @@ L.LLLLL.LL
     challenge_map = Path("../data/input_day11.txt").read_text()
 
     sample_board = Board.initialize_board(sample_map, 4)
+    sample_board_p2 = Board.initialize_board(sample_map, 5, "vis")
     challenge_board = Board.initialize_board(challenge_map, 4)
-    part2_board = Board.initialize_board(challenge_map, 5)
+    challenge_board_p2 = Board.initialize_board(challenge_map, 5, "vis")
 
     # print(sample_board.count_neighbors(Point(0, 2)))
     # print(sample_board)
     # print(sample_board.update_board())
     # print(sample_board.find_stable_state())
+    print(sample_board_p2.find_stable_state())
+    print(challenge_board_p2.find_stable_state())
     #
     # print(challenge_board.find_stable_state())
-    sample_board.seat_map = sample_board.update_board()
-    print(sample_board.count_visible_neighbors(Point(row=2, column=7)))
+    # sample_board.seat_map = sample_board.update_board()
+    # print(sample_board_p2.count_visible_neighbors(Point(row=4, column=3)))
