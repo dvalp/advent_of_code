@@ -17,12 +17,12 @@ class Navigator:
     facing: IntEnum = Direction.E
 
     def read_instructions(self, instructions: list[str]) -> None:
+        dirs = {"N": Direction.N, "E": Direction.E, "S": Direction.S, "W": Direction.W}
         for line in instructions:
             command, value = line[0], int(line[1:])
             if command == "F":
                 self.move_direction(self.facing, value)
             elif command in set("NESW"):
-                dirs = {"N": Direction.N, "E": Direction.E, "S": Direction.S, "W": Direction.W}
                 self.move_direction(dirs[command], value)
             elif command in set("LR"):
                 self.change_direction(command, value)
@@ -40,9 +40,9 @@ class Navigator:
             raise ValueError("slef.facing only has 4 allowed vallues. %s is invalid." % direction)
 
     def change_direction(self, command: str, value: int) -> None:
-        degrees = self.facing
+        degrees = self.facing.value
         if command == "L":
-            degrees = abs(degrees - value) % 360
+            degrees = (degrees + 360 - value) % 360
         elif command == "R":
             degrees = (degrees + value) % 360
         else:
