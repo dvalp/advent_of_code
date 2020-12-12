@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import IntEnum
+from pathlib import Path
 
 
 class Direction(IntEnum):
@@ -36,7 +37,7 @@ class Navigator:
         elif direction == Direction.S:
             self.long_dist -= dist
         else:
-            raise ValueError("slef.facing only has 4 allowed vallues. %s is invalid." % self.facing)
+            raise ValueError("slef.facing only has 4 allowed vallues. %s is invalid." % direction)
 
     def change_direction(self, command: str, value: int) -> None:
         degrees = self.facing
@@ -60,3 +61,11 @@ F7
 R90
 F11
 """
+    full_instructions = Path("../data/input_day12.txt").read_text().split()
+    nav = Navigator()
+    nav.read_instructions(sample_directions.split())
+    print(nav.manhattan_dist)
+
+    nav_complete = Navigator()
+    nav_complete.read_instructions(full_instructions)
+    print(nav_complete.manhattan_dist)
