@@ -39,14 +39,20 @@ class Navigator:
             elif command in set("LR"):
                 turn_function(command, value)
 
-    def move_direction(self, command: str, dist: int) -> None:
+    def move_direction(self, command: str, dist: int, wp: bool = False) -> None:
         direction = self.facing if command == "F" else Direction[command]
         dist = -dist if direction in {Direction.W, Direction.S} else dist
+        if wp:
+            lat_field, long_field = "wp_lat", "wp_long"
+            lat, long = self.wp_lat, self.wp_long
+        else:
+            lat_field, long_field = "ship_lat", "ship_long"
+            lat, long = self.ship_lat, self.ship_long
 
         if direction in {Direction.E, Direction.W}:
-            self.ship_lat += dist
+            self.__setattr__(lat_field, lat + dist)
         elif direction in {Direction.N, Direction.S}:
-            self.ship_long += dist
+            self.__setattr__(long_field, long + dist)
         else:
             raise ValueError("self.facing only has 4 allowed values. %s is invalid." % direction)
 
