@@ -71,15 +71,7 @@ class Navigator:
             self.ship_lat += dist * self.wp_lat
             self.ship_long += dist * self.wp_long
         else:
-            direction = Direction[command]
-            dist = -dist if direction in {Direction.W, Direction.S} else dist
-
-            if direction in {Direction.E, Direction.W}:
-                self.wp_lat += dist
-            elif direction in {Direction.N, Direction.S}:
-                self.wp_long += dist
-            else:
-                raise ValueError("self.facing only has 4 allowed values. %s is invalid." % direction)
+            self.move_direction(command, dist, wp=True)
 
     def rotate_waypoint(self, command: str, value: int):
         if (command == "L" and value == 90) or (command == "R" and value == 270):
