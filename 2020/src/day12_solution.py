@@ -59,11 +59,8 @@ class Navigator:
     def change_direction(self, command: str, value: int) -> None:
         degrees = self.facing.value
         if command == "L":
-            degrees = (degrees + 360 - value) % 360
-        elif command == "R":
-            degrees = (degrees + value) % 360
-        else:
-            raise ValueError("Ship can only turn L or R")
+            value = 360 - value
+        degrees = (degrees + value) % 360
         self.facing = Direction(degrees)
 
     def move_waypoint(self, command: str, dist: int):
