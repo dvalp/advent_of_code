@@ -8,7 +8,7 @@ def find_bus(target_time: int, schedule: str) -> int:
 
 
 def gold_challenge(schedule) -> int:
-    bus_ids = [int(bus) for bus in schedule.split(",") if bus.isnumeric()]
+    bus_ids = [int(bus) for bus in schedule if bus.isnumeric()]
     time_offsets = [schedule.index(str(bus)) for bus in bus_ids]
     id_offsets = list((zip(bus_ids, time_offsets)))
     max_id, max_id_offset = max(zip(bus_ids[1:], time_offsets[1:]))
@@ -25,8 +25,8 @@ def gold_challenge(schedule) -> int:
     return timestamp
 
 
-def validate_timestamp(timestamp: int, id_offsets: list[tuple[int,int]]) -> bool:
-    pass
+def validate_timestamp(timestamp: int, id_offsets: list[tuple[int, int]]) -> bool:
+    return timestamp % id_offsets[0][0] == 0 and all((bus - (timestamp % bus) == offset) for bus, offset in id_offsets[1:])
 
 
 if __name__ == '__main__':
@@ -38,3 +38,6 @@ if __name__ == '__main__':
 
     print(find_bus(int(sample_target), sample_schedule))
     print(find_bus(int(real_target), real_schedule))
+
+    print(gold_challenge(sample_schedule))
+    print(gold_challenge(real_schedule))
