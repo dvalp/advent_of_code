@@ -26,7 +26,19 @@ def gold_challenge(schedule) -> int:
 
 
 def validate_timestamp(timestamp: int, id_offsets: list[tuple[int, int]]) -> bool:
-    return timestamp % id_offsets[0][0] == 0 and all((bus - (timestamp % bus) == offset) for bus, offset in id_offsets[1:])
+    return timestamp % id_offsets[0][0] == 0 \
+           and all((bus - (timestamp % bus) == offset) for bus, offset in id_offsets[1:])
+
+
+def gold_challenge_smarter(schedule):
+    busses_offsets = [(idx, int(bus)) for idx, bus in enumerate(schedule) if bus.isnumeric()]
+    timestamp = busses_offsets[0][1]
+    step = 1
+    for offset, bus in busses_offsets:
+        while not (timestamp + offset) % bus == 0:
+            timestamp += step
+        step *= bus
+    return timestamp
 
 
 if __name__ == '__main__':
@@ -40,4 +52,5 @@ if __name__ == '__main__':
     print(find_bus(int(real_target), real_schedule))
 
     print(gold_challenge(sample_schedule))
-    print(gold_challenge(real_schedule))
+    print(gold_challenge_smarter(sample_schedule) == 1068781)
+    print(gold_challenge_smarter(real_schedule) == 487905974205117)
