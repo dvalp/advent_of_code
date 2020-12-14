@@ -13,10 +13,18 @@ class DockingCode:
     float_masks: list[dict[int, str]] = field(default_factory=list)
 
     @property
-    def sum_values(self):
+    def sum_values(self) -> int:
+        """Sum of all the code values for the solution entry"""
         return sum(self.codes.values())
 
     def modify_docking_values(self, program: list[str]) -> None:
+        """
+        Get a mask from the input text and store it as a property. Then apply
+        the mask to the following values until a new mask is found. Repeat
+        until the file ends.
+
+        :param program: List of codes to process
+        """
         for line in program:
             if line.startswith("mask = "):
                 self.mask = dict(
@@ -28,12 +36,21 @@ class DockingCode:
                 self.codes[address] = int(''.join((bin_value | self.mask).values()), 2)
 
     def modify_memory_ids(self, program: list[str]) -> None:
+        """
+        Each mask line defines a set of bits that should change to 1, and
+        another set that can be 1 or 0. All possible masks should be applied
+        to a memory address. The value should then be stored to all possible
+        memory addresses.
+
+        :param program: List of codes to process
+        """
         for line in program:
             if line.startswith("mask = "):
                 mask = line.removeprefix("mask = ").strip()
                 self.mask = dict((idx, value) for idx, value in enumerate(mask) if value == "1")
                 float_ids = [idx for idx, mem_id in enumerate(mask) if mem_id == "X"]
-                self.float_masks = [dict(zip(float_ids, values)) for values in product({"1", "0"}, repeat=len(float_ids))]
+                self.float_masks = [dict(zip(float_ids, values)) for values in
+                                    product({"1", "0"}, repeat=len(float_ids))]
             else:
                 address, in_value = re.match(MEM_VALUE, line).group("address", "value")
                 bin_address = dict(enumerate(format(int(address), '036b')))
