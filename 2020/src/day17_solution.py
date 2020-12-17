@@ -107,8 +107,12 @@ class PowerGrid4D(PowerGrid):
 
 
 if __name__ == '__main__':
-    # test_grid = PowerGrid(TEST_DATA)
+    # test_grid = PowerGrid.parse_data(TEST_DATA)
     # test_grid.run_cycles(6)
+    # test_grid_p2 = PowerGrid4D.parse_data(TEST_DATA)
+    # test_grid_p2.run_cycles(6)
 
-    true_grid = PowerGrid.parse_data(CHALLENGE_DATA)
+    # true_grid = PowerGrid.parse_data(CHALLENGE_DATA)
+    # true_grid.run_cycles(6)
+    true_grid = PowerGrid4D.parse_data(CHALLENGE_DATA)
     true_grid.run_cycles(6)
