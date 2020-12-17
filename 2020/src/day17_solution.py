@@ -18,6 +18,7 @@ CHALLENGE_DATA = """....###.
 
 
 class Coord(NamedTuple):
+    """3-dimensional coordinates for part 1"""
     x: int
     y: int
     z: int
@@ -27,6 +28,7 @@ class Coord(NamedTuple):
 
 
 class Coord4D(NamedTuple):
+    """4-dimensional coordinates for part 2"""
     x: int
     y: int
     z: int
@@ -38,11 +40,20 @@ class Coord4D(NamedTuple):
 
 @dataclass
 class PowerGrid:
+    """This class tracks which cells in the grid are active at any time"""
     active_cells: set[Coord] = field(default_factory=set)
     neighbor_references: set[Coord] = field(default_factory=set)
 
     @staticmethod
-    def parse_data(grid_map: str):
+    def parse_data(grid_map: str) -> PowerGrid:
+        """
+        Reads in the beginning map of the grid as a slice of 3-dimensional
+        space and returns a PowerGrid object that can run cycles, tracking
+        changes over time.
+
+        :param grid_map: A map of the starting state of the power grid
+        :return: A fully initialized PowerGrid object in 3 dimensions
+        """
         active_cells = set()
         for y, row in enumerate(grid_map.split()):
             for x, value in enumerate(row):
@@ -56,10 +67,27 @@ class PowerGrid:
         return PowerGrid(active_cells=active_cells, neighbor_references=neighbor_references)
 
     @property
-    def active_count(self):
+    def active_count(self) -> int:
+        """
+        The goal of the challenge is to track the number of active cells in
+        the grid at any time. This count gives the answer to the challenge.
+
+        :return: Number of active cells
+        """
         return len(self.active_cells)
 
-    def next_state(self):
+    def next_state(self) -> None:
+        """
+        Find number of cells that will be active in the next cycle.
+
+        If the cell is active and has 2 or 3 active neighbors, it will remain
+        active in the next cycle.
+
+        If the cell is not active and has exactly 3 active neighbors, it will
+        be active in the next cycle.
+
+        The listing of active cells gets replaced after the map is completed.
+        """
         check_coords = deque(self.active_cells)
         checked = set()
         new_active = set()
@@ -80,7 +108,12 @@ class PowerGrid:
 
         self.active_cells = new_active
 
-    def run_cycles(self, iterations: int):
+    def run_cycles(self, iterations: int) -> None:
+        """
+        This makes it easier to control how many cycles run in a batch.
+
+        :param iterations: Number of cycles to run in the batch
+        """
         for _ in range(iterations):
             self.next_state()
         print(self.active_count)
@@ -88,11 +121,25 @@ class PowerGrid:
 
 @dataclass
 class PowerGrid4D(PowerGrid):
+    """
+    This class tracks which cells in the grid are active at any time in
+    4-dimensions.
+    """
     active_cells: set[Coord4D] = field(default_factory=set)
     neighbor_references: set[Coord4D] = field(default_factory=set)
 
     @staticmethod
-    def parse_data(grid_map: str):
+    def parse_data(grid_map: str) -> PowerGrid4D:
+        """
+        Override the parsing method to allow for 4 dimensions.
+
+        Reads in the beginning map of the grid as a slice of 4-dimensional
+        space and returns a PowerGrid object that can run cycles, tracking
+        changes over time.
+
+        :param grid_map: A map of the starting state of the power grid
+        :return: A fully initialized PowerGrid object in 3 dimensions
+        """
         active_cells = set()
         for y, row in enumerate(grid_map.split()):
             for x, value in enumerate(row):
