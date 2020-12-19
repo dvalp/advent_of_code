@@ -21,7 +21,7 @@ REPLACEMENT_RULES = """8: 42 | 42 8
 
 
 class Rule(TypedDict):
-    value: Optional[int]
+    value: Optional[str]
     rules: Optional[list[list[int]]]
 
 
@@ -32,10 +32,12 @@ class ResolveRules:
     re_pattern: Optional[re.Pattern] = None
 
     @property
-    def valid_count(self):
+    def valid_count(self) -> int:
+        """Get the number of messages that match the compiled regex pattern"""
         return sum(1 for message in self.messages if self.re_pattern.match(message))
 
-    def add_rule(self, rule: str):
+    def add_rule(self, rule: str) -> None:
+        """Parse line and add a rule to self.rule_defs. Overwrites existing rules (important for part 2)."""
         left, right = rule.split(": ")
         key = int(left)
         if '"' in right:
@@ -44,17 +46,20 @@ class ResolveRules:
             rules = [[int(val) for val in group.split()] for group in right.split(" | ")]
             self.rule_defs[key] = Rule(value=None, rules=rules)
 
-    def import_data(self, raw_data: str):
+    def import_data(self, raw_data: str) -> None:
+        """Transform a string containing rules and messages into data for the class"""
         raw_rules, raw_messages = raw_data.split("\n\n")
         for rule in raw_rules.split("\n"):
             self.add_rule(rule)
         self.messages = raw_messages.strip().split()
 
-    def build_pattern(self, rule_id: int = 0):
+    def build_pattern(self, rule_id: int = 0) -> None:
+        """Compile and store a regex pattern for validating the messages"""
         message_pattern = self._build_pattern(rule_id)
         self.re_pattern = re.compile(rf"^{message_pattern}$")
 
-    def _build_pattern(self, rule_id: int, depth: int = 0):
+    def _build_pattern(self, rule_id: int, depth: int = 0) -> str:
+        """Recursive function that does the work of building the string for the regex pattern"""
         current_rule = self.rule_defs[rule_id]
         if letter := current_rule["value"]:
             return letter
@@ -80,7 +85,7 @@ if __name__ == '__main__':
     resolver.build_pattern()
     print(resolver.valid_count)
 
-    for rule in REPLACEMENT_RULES.split("\n"):
-        resolver.add_rule(rule)
+    for line in REPLACEMENT_RULES.split("\n"):
+        resolver.add_rule(line)
     resolver.build_pattern()
     print(resolver.valid_count)
