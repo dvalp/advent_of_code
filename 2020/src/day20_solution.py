@@ -7,7 +7,7 @@ from math import prod
 
 @dataclass
 class TilePuzzle:
-    tiles: dict[int, list] = field(default_factory=lambda: defaultdict(list))
+    tiles: dict[int, dict] = field(default_factory=lambda: defaultdict(dict))
     edges: dict[str, set] = field(default_factory=lambda: defaultdict(set))
     corners: list[int] = field(default_factory=list)
 
@@ -19,24 +19,29 @@ class TilePuzzle:
         tile_id = int(tile[0][5:-1])
         tile_image = tile[1:]
         transposed_tile = list(zip(*tile_image))
+
         right = "".join(transposed_tile[-1])
         left = "".join(transposed_tile[0])
+        top = tile_image[0]
+        bottom = tile_image[-1]
 
-        edges = []
-        edges.extend([
-            tile_image[0],
-            tile_image[-1],
-            left,
-            right,
-        ])
+        tile_edges = {
+            top: "top",
+            bottom: "bottom",
+            left: "left",
+            right: "right"
+        }
 
-        self.tiles[tile_id] = edges
-        for edge in edges:
+        self.tiles[tile_id] = tile_edges
+        for edge in tile_edges:
             self.edges[edge].add(tile_id)
             self.edges[edge[::-1]].add(tile_id)
 
     def _count_matching_edges(self, tile_id: int) -> int:
         return sum(1 for edge in self.tiles[tile_id] if len(self.edges[edge]) > 1)
+
+    def _tile_neighbors(self, tile_id: int) -> set[int]:
+        return {tid for edge in self.tiles[tile_id] for tid in self.edges[edge] if tid != tile_id}
 
     def read_tiles(self, tile_list: list[str]):
         for tile in tile_list:
