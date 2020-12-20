@@ -9,13 +9,11 @@ from math import prod
 class TilePuzzle:
     tiles: dict[int, list] = field(default_factory=lambda: defaultdict(list))
     edges: dict[str, set] = field(default_factory=lambda: defaultdict(set))
+    corners: list[int] = field(default_factory=list)
 
     @property
     def corners_product(self) -> int:
-        corners = [tile_id for tile_id in self.tiles if self._count_matching_edges(tile_id) == 2]
-        if corner_count := len(corners) != 4:
-            raise RuntimeError("Miscounted the number of corners, got %s" % corner_count)
-        return prod(corners)
+        return prod(self.corners)
 
     def add_tile(self, tile: list[str]):
         tile_id = int(tile[0][5:-1])
@@ -43,6 +41,11 @@ class TilePuzzle:
     def read_tiles(self, tile_list: list[str]):
         for tile in tile_list:
             self.add_tile(tile.strip().split("\n"))
+        corners = [tile_id for tile_id in tiler.tiles if tiler._count_matching_edges(tile_id) == 2]
+        if corner_count := len(corners) == 4:
+            self.corners = corners
+        else:
+            raise RuntimeError("Miscounted the number of corners, got %s" % corner_count)
 
 
 if __name__ == '__main__':
