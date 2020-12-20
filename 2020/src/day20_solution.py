@@ -11,7 +11,7 @@ class TilePuzzle:
     edges: dict[str, set] = field(default_factory=lambda: defaultdict(set))
 
     @property
-    def corners_product(self):
+    def corners_product(self) -> int:
         corners = [tile_id for tile_id in self.tiles if self._count_matching_edges(tile_id) == 2]
         if corner_count := len(corners) != 4:
             raise RuntimeError("Miscounted the number of corners, got %s" % corner_count)
@@ -37,7 +37,7 @@ class TilePuzzle:
             self.edges[edge].add(tile_id)
             self.edges[edge[::-1]].add(tile_id)
 
-    def _count_matching_edges(self, tile_id):
+    def _count_matching_edges(self, tile_id: int) -> int:
         return sum(1 for edge in self.tiles[tile_id] if len(self.edges[edge]) > 1)
 
     def read_tiles(self, tile_list: list[str]):
