@@ -16,7 +16,7 @@ class TilePuzzle:
     def corners_product(self) -> int:
         return prod(self.corners)
 
-    def add_tile(self, tile: list[str]) -> None:
+    def add_new_tile(self, tile: list[str]) -> None:
         tile_id = int(tile[0][5:-1])
         tile_image = tile[1:]
         self.store_tile(tile_id, tile_image)
@@ -25,9 +25,8 @@ class TilePuzzle:
             self.edges[edge[::-1]].add(tile_id)
 
     def store_tile(self, tile_id, tile_image) -> None:
-        rotated_tile = self._rotate_image(tile_image)
-        right = rotated_tile[-1]
-        left = rotated_tile[0]
+        right = "".join(row[-1] for row in tile_image)
+        left = "".join(row[0] for row in tile_image)
         top = tile_image[0]
         bottom = tile_image[-1]
         tile_edges = {
@@ -62,7 +61,7 @@ class TilePuzzle:
 
     def read_tiles(self, tile_list: list[str]):
         for tile in tile_list:
-            self.add_tile(tile.strip().split("\n"))
+            self.add_new_tile(tile.strip().split("\n"))
         corners = [tile_id for tile_id in self.tiles if self._count_matching_edges(tile_id) == 2]
         if corner_count := len(corners) == 4:
             self.corners = corners
