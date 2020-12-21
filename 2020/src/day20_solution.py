@@ -9,6 +9,7 @@ from math import prod
 class TilePuzzle:
     tiles: dict[int, dict] = field(default_factory=lambda: defaultdict(dict))
     edges: dict[str, set] = field(default_factory=lambda: defaultdict(set))
+    images: dict[int, list[str]] = field(default_factory=lambda: defaultdict(list))
     corners: list[int] = field(default_factory=list)
 
     @property
@@ -18,24 +19,25 @@ class TilePuzzle:
     def add_tile(self, tile: list[str]):
         tile_id = int(tile[0][5:-1])
         tile_image = tile[1:]
-        transposed_tile = list(zip(*tile_image))
+        self.images[tile_id] = tile_image
+        self.store_tile(tile_id, tile_image)
+        for edge in self.tiles[tile_id]:
+            self.edges[edge].add(tile_id)
+            self.edges[edge[::-1]].add(tile_id)
 
+    def store_tile(self, tile_id, tile_image):
+        transposed_tile = list(zip(*tile_image))
         right = "".join(transposed_tile[-1])
         left = "".join(transposed_tile[0])
         top = tile_image[0]
         bottom = tile_image[-1]
-
         tile_edges = {
             top: "top",
             bottom: "bottom",
             left: "left",
-            right: "right"
+            right: "right",
         }
-
         self.tiles[tile_id] = tile_edges
-        for edge in tile_edges:
-            self.edges[edge].add(tile_id)
-            self.edges[edge[::-1]].add(tile_id)
 
     def _count_matching_edges(self, tile_id: int) -> int:
         return sum(1 for edge in self.tiles[tile_id] if len(self.edges[edge]) > 1)
@@ -46,7 +48,7 @@ class TilePuzzle:
     def read_tiles(self, tile_list: list[str]):
         for tile in tile_list:
             self.add_tile(tile.strip().split("\n"))
-        corners = [tile_id for tile_id in tiler.tiles if tiler._count_matching_edges(tile_id) == 2]
+        corners = [tile_id for tile_id in self.tiles if self._count_matching_edges(tile_id) == 2]
         if corner_count := len(corners) == 4:
             self.corners = corners
         else:
