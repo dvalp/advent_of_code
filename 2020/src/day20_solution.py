@@ -16,19 +16,18 @@ class TilePuzzle:
     def corners_product(self) -> int:
         return prod(self.corners)
 
-    def add_tile(self, tile: list[str]):
+    def add_tile(self, tile: list[str]) -> None:
         tile_id = int(tile[0][5:-1])
         tile_image = tile[1:]
-        self.images[tile_id] = tile_image
         self.store_tile(tile_id, tile_image)
         for edge in self.tiles[tile_id]:
             self.edges[edge].add(tile_id)
             self.edges[edge[::-1]].add(tile_id)
 
-    def store_tile(self, tile_id, tile_image):
-        transposed_tile = list(zip(*tile_image))
-        right = "".join(transposed_tile[-1])
-        left = "".join(transposed_tile[0])
+    def store_tile(self, tile_id, tile_image) -> None:
+        rotated_tile = self._rotate_image(tile_image)
+        right = rotated_tile[-1]
+        left = rotated_tile[0]
         top = tile_image[0]
         bottom = tile_image[-1]
         tile_edges = {
@@ -37,6 +36,7 @@ class TilePuzzle:
             left: "left",
             right: "right",
         }
+        self.images[tile_id] = tile_image
         self.tiles[tile_id] = tile_edges
 
     def _count_matching_edges(self, tile_id: int) -> int:
@@ -44,6 +44,21 @@ class TilePuzzle:
 
     def _tile_neighbors(self, tile_id: int) -> set[int]:
         return {tid for edge in self.tiles[tile_id] for tid in self.edges[edge] if tid != tile_id}
+
+    @staticmethod
+    def _flip_horizontal(image: list[str]) -> list[str]:
+        """Reverse the order of character in each string"""
+        return [row[::-1] for row in image]
+
+    @staticmethod
+    def _flip_vertical(image: list[str]) -> list[str]:
+        """Reverse the order of the rows, leave each string in the same order"""
+        return image[::-1]
+
+    @staticmethod
+    def _rotate_image(image: list[str]) -> list[str]:
+        """Rotate the image 90 degrees clockwise"""
+        return ["".join(row) for row in zip(*image[::-1])]
 
     def read_tiles(self, tile_list: list[str]):
         for tile in tile_list:
