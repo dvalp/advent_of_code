@@ -23,7 +23,7 @@ def get_data():
             yield line.strip()
 
 
-def part1(data: Iterable):
+def part1(data: Iterable[str]) -> int:
     counts = defaultdict(Counter)
     gamma_bits = []
     epsilon_bits = []
@@ -42,7 +42,7 @@ def part1(data: Iterable):
     return gamma * epsilon
 
 
-def part2(data: Iterable):
+def part2(data: Iterable[str]) -> int:
     idx = 0
     o2_matrix = co2_matrix = np.array([[int(digit) for digit in line] for line in data])
     calc_o2 = calc_co2 = True
