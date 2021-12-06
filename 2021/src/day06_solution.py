@@ -32,5 +32,5 @@ if __name__ == '__main__':
     file_input = [int(val) for val in Path("../data/input_day06.txt").read_text().strip().split(",")]
     print(calculate_population(RAW, 18))
     print(calculate_population(file_input, 80))
-    print(calculate_population(RAW, 256))
-    print(calculate_population(file_input, 256))
+    print(solve(RAW, 256))
+    print(solve(file_input, 256))
