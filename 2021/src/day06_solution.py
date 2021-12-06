@@ -16,6 +16,18 @@ def calculate_population(input_data: list[int], iterations: int):
     return len(data)
 
 
+def solve(fish_ages: list[int], days: int) -> int:
+    """
+    My solution was useless for the larger number of days
+    I really like the modulo approach from this python solution
+    https://github.com/Peter200lx/advent-of-code/blob/master/2021/day06.py
+    """
+    count_of_fish_in_age = [fish_ages.count(i) for i in range(9)]
+    for i in range(days):
+        count_of_fish_in_age[(i + 7) % 9] += count_of_fish_in_age[i % 9]
+    return sum(count_of_fish_in_age)
+
+
 if __name__ == '__main__':
     file_input = [int(val) for val in Path("../data/input_day06.txt").read_text().strip().split(",")]
     print(calculate_population(RAW, 18))
