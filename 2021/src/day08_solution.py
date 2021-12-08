@@ -13,7 +13,7 @@ egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce""".strip().split("\n")
 
 
-def identify_digits(input_data):
+def count_simple(input_data):
     number_count = 0
     for line in input_data:
         digits, codes = line.split("|")
@@ -39,5 +39,5 @@ def identify_digits(input_data):
 
 if __name__ == '__main__':
     file_data = Path("../data/input_day08.txt").read_text().strip().split("\n")
-    print(identify_digits(SAMPLE_DATA))
-    print(identify_digits(file_data))
+    print(count_simple(SAMPLE_DATA))
+    print(count_simple(file_data))
