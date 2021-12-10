@@ -17,18 +17,6 @@ def count_simple(input_data):
     number_count = 0
     for line in input_data:
         digits, codes = line.split("|")
-        code_map = defaultdict(int)
-        # for entry in digits.split():
-        #     entry_length = len(entry)
-        #     match entry_length:
-        #         case 2:
-        #             code_map[entry] = 1
-        #         case 4:
-        #             code_map[entry] = 4
-        #         case 3:
-        #             code_map[entry] = 7
-        #         case 7:
-        #             code_map[entry] = 8
 
         for code in codes.split():
             if len(code) in {2, 3, 4, 7}:
