@@ -37,7 +37,72 @@ def count_simple(input_data):
     return number_count
 
 
+def signal_evaluation(input_data) -> int:
+    """
+    0 len 6          5 len 5
+    1 len 2          6 len 6
+    2 len 5          7 len 3
+    3 len 5          8 len 7
+    4 len 4          9 len 6
+
+    Known: 1, 4, 7, 8
+    len 5
+        2: not 1, 4, 7, 8 - 3 different from 6
+        3: 1, 7, not 4, 8
+        5: not 1, 4, 7, 8 - 1 different from 6
+    len 6
+        0: not superset of 4
+        6: not superset of 1
+        9: superset of 4
+
+    :param input_data:
+    :return:
+    """
+    result = 0
+
+    for line in input_data:
+        digits, codes = line.split("|")
+        code_map = map_digits(digits.split())
+        result += int("".join(str(code_map[frozenset(code)]) for code in codes.split()))
+
+    return result
+
+
+def map_digits(digits: list[str]) -> dict[frozenset, int]:
+    code_map = {}
+    length_map = defaultdict(list)
+
+    for entry in digits:
+        length_map[len(entry)].append(frozenset(entry))
+
+    for entry in digits:
+        code_map[1] = length_map[2][0]
+        code_map[4] = length_map[4][0]
+        code_map[7] = length_map[3][0]
+        code_map[8] = length_map[7][0]
+
+    for entry in length_map[6]:
+        if entry > code_map[4]:
+            code_map[9] = entry
+        elif not entry > code_map[1]:
+            code_map[6] = entry
+        else:
+            code_map[0] = entry
+
+    for entry in length_map[5]:
+        if len(entry ^ code_map[9]) > 1:
+            code_map[2] = entry
+        elif entry < code_map[6]:
+            code_map[5] = entry
+        else:
+            code_map[3] = entry
+
+    return {value: key for key, value in code_map.items()}
+
+
 if __name__ == '__main__':
     file_data = Path("../data/input_day08.txt").read_text().strip().split("\n")
     print(count_simple(SAMPLE_DATA))
     print(count_simple(file_data))
+    print(signal_evaluation(SAMPLE_DATA))
+    print(signal_evaluation(file_data))
