@@ -39,12 +39,6 @@ def count_simple(input_data):
 
 def signal_evaluation(input_data) -> int:
     """
-    0 len 6          5 len 5
-    1 len 2          6 len 6
-    2 len 5          7 len 3
-    3 len 5          8 len 7
-    4 len 4          9 len 6
-
     Known: 1, 4, 7, 8
     len 5
         2: not 1, 4, 7, 8 - 3 different from 6
