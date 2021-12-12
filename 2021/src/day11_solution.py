@@ -22,7 +22,7 @@ def convert_matrix_to_graph(input_data: list[str]) -> nx.Graph:
 
             neighbors = {(row, column - 1), (row - 1, column - 1), (row - 1, column), (row - 1, column + 1)}
             for neighbor in neighbors:
-                if neighbor in octo_grid.nodes:
+                if octo_grid.has_node(neighbor):
                     octo_grid.add_edge((row, column), neighbor)
     return octo_grid
 
