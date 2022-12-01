@@ -20,7 +20,6 @@ def calories():
     10000""".strip().split("\n")
 
 
-def test_get_calorie_values(calories):
-    assert get_calorie_values(calories) == 24000
-    assert get_calorie_values(calories, 3) == 45000
-
+@pytest.mark.parametrize("count,expected", [(1, 24000), (3, 45000)])
+def test_get_calorie_values(calories, count, expected):
+    assert get_calorie_values(data=calories, count=count) == expected
