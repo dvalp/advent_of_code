@@ -57,7 +57,7 @@ def map_digits(digits: list[str]) -> dict[frozenset, int]:
     for entry in digits:
         length_map[len(entry)].append(frozenset(entry))
 
-    for entry in digits:
+    for _ in digits:
         code_map[1] = length_map[2][0]
         code_map[4] = length_map[4][0]
         code_map[7] = length_map[3][0]
