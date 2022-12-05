@@ -26,4 +26,4 @@ def test_restack_crates(moves, arrangement):
 
 
 def test_restack_crates_upgrade(moves, arrangement):
-    assert restack_crates_upgrade(moves, arrangement) == "MCD"
+    assert restack_crates(moves, arrangement, batch_move=True) == "MCD"
