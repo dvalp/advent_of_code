@@ -49,7 +49,7 @@ class Directory:
                     current = current.subdirs[name]
                 case desc, name if desc.isdecimal():
                     current.create_file(name=name, desc=desc)
-                case desc, name if desc == "dir":
+                case "dir", name:
                     current.create_subdir(name)
                 case _:
                     pass
