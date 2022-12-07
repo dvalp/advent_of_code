@@ -1,7 +1,6 @@
-from collections import deque
-
 import pytest
 from src.day_06_solution import find_start
+
 
 @pytest.mark.parametrize(
     "message,position",
