@@ -2,7 +2,7 @@ import numpy as np
 from pathlib import Path
 
 
-def estimate_tree_cover(tree_map):
+def estimate_tree_cover(tree_map: list[str]) -> tuple[int, int]:
     trees = np.array([list(row) for row in tree_map]).astype(int)
     x_limit, y_limit = (val -1 for val in trees.shape)
     cover_map = np.ones_like(trees)
@@ -24,7 +24,7 @@ def estimate_tree_cover(tree_map):
     return cover_map.sum(), max_scenic
 
 
-def evaluate_views(sightlines: list[np.array], height):
+def evaluate_views(sightlines: list[np.array], height: int) -> np.array:
     view_scores = []
     for view in sightlines:
         if np.any(blocks := (view >= height)):
