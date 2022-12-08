@@ -24,14 +24,14 @@ def estimate_tree_cover(tree_map: list[str]) -> tuple[int, int]:
     return cover_map.sum(), max_scenic
 
 
-def evaluate_views(sightlines: list[np.array], height: int) -> np.array:
-    view_scores = []
+def evaluate_views(sightlines: list[np.array], height: int) -> int:
+    view_scores = np.array([], dtype=int)
     for view in sightlines:
         if np.any(blocks := (view >= height)):
-            view_scores.append(np.argmax(blocks) + 1)
+            view_scores = np.append(view_scores, np.argmax(blocks) + 1)
         else:
-            view_scores.append(len(view))
-    return np.prod(view_scores)
+                  view_scores = np.append(view_scores, len(view))
+    return view_scores.prod()
 
 
 if __name__ == '__main__':
