@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Callable, TypeAlias, Iterable
 
 math_operator: TypeAlias = Callable[[int, int], int]
+
+
 @dataclass
 class Monkey:
     name: str
