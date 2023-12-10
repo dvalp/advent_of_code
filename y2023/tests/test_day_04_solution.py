@@ -13,6 +13,6 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11""".strip().splitlines()
 
 
 def test_calculate_points(cards):
-    points, cards = calculate_points(cards)
+    points, card_count = calculate_points(cards)
     assert points == 13
-    assert cards == 30
+    assert card_count == 30
