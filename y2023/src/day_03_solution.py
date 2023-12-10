@@ -3,7 +3,7 @@ from collections import defaultdict, namedtuple
 from pathlib import Path
 
 
-gear_results = namedtuple("gear_results", ["total", "ratio"])
+GearResults = namedtuple("GearResults", ["total", "ratio"])
 
 
 def get_parts_total(schematic):
@@ -47,7 +47,7 @@ def get_parts_total(schematic):
         if len(parts) == 2:
             ratio_total += parts[0] * parts[1]
 
-    return gear_results(total, ratio_total)
+    return GearResults(total, ratio_total)
 
 
 if __name__ == '__main__':
