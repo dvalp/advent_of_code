@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import numpy as np
 from scipy import signal
-from pathlib import Path
 
 char_translation = str.maketrans(".@", "01")
 
@@ -36,7 +37,7 @@ def count_roles(roll_map: str) -> int:
         Sum of rolls that can be moved.
     """
     roll_map = convert_data(roll_map)
-    kernel = np.array([[1,1,1],[1,0,1],[1,1,1]], dtype="int8")
+    kernel = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]], dtype="int8")
     convolve_map = signal.convolve2d(roll_map, kernel, mode="same")
     movable_rolls = np.logical_and(roll_map == 1, convolve_map < 4)
     return np.sum(movable_rolls)
