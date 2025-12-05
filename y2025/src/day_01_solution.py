@@ -1,6 +1,7 @@
 from pathlib import Path
 
-def unlock(rotations: list[str], start: int = 50) -> (int, int):
+
+def unlock(rotations: list[str], start: int = 50) -> tuple[int, int]:
     """
     Calculate code based on rotation combinations.
     Args:
@@ -38,8 +39,9 @@ def unlock(rotations: list[str], start: int = 50) -> (int, int):
             code1 += 1
     return code1, code2
 
+
 if __name__ == "__main__":
-    file_data = Path("y2025/data/input_day01.txt").read_text().strip().splitlines()
+    file_data = Path("y2025/data/input_day_01.txt").read_text().strip().splitlines()
     result1, result2 = unlock(file_data)
     print(f"Part 1: {result1}")
     print(f"Part 2: {result2}")
